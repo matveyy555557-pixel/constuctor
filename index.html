@@ -1,0 +1,206 @@
+import tkinter as tk
+from tkinter import messagebox
+
+class ChemistryQuizApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Тест: Типы химических реакций")
+        self.root.geometry("620x500")
+        self.root.config(bg="#f0f4f8")
+
+        self.questions = [
+            {
+                "question": "Укажите уравнение реакции соединения среди приведенных вариантов:",
+                "options": [
+                    "A) CaO + H2O → Ca(OH)2",
+                    "B) CaCO3 → CaO + CO2",
+                    "C) Zn + 2HCl → ZnCl2 + H2",
+                    "D) NaOH + HCl → NaCl + H2O"
+                ],
+                "answer": "A"
+            },
+            {
+                "question": "Какое из следующих уравнений описывает реакцию разложения?",
+                "options": [
+                    "A) 2H2 + O2 → 2H2O",
+                    "B) 2KClO3 → 2KCl + 3O2",
+                    "C) Fe + CuSO4 → FeSO4 + Cu",
+                    "D) KOH + HNO3 → KNO3 + H2O"
+                ],
+                "answer": "B"
+            },
+            {
+                "question": "Выберите уравнение, которое относится к реакциям замещения:",
+                "options": [
+                    "A) Na2O + H2O → 2NaOH",
+                    "B) CaCO3 → CaO + CO2",
+                    "C) Cl2 + 2NaBr → 2NaCl + Br2",
+                    "D) BaCl2 + H2SO4 → BaSO4↓ + 2HCl"
+                ],
+                "answer": "C"
+            },
+            {
+                "question": "Какое уравнение иллюстрирует реакцию обмена?",
+                "options": [
+                    "A) N2 + 3H2 ⇄ 2NH3",
+                    "B) CuSO4 + 2NaOH → Cu(OH)2↓ + Na2SO4",
+                    "C) Zn + 2HCl → ZnCl2 + H2",
+                    "D) 2Mg + O2 → 2MgO"
+                ],
+                "answer": "B"
+            },
+            {
+                "question": "Какая из реакций является одновременно реакцией соединения и окислительно-восстановительной?",
+                "options": [
+                    "A) SO3 + H2O → H2SO4",
+                    "B) CaO + CO2 → CaCO3",
+                    "C) 2NO + O2 → 2NO2",
+                    "D) NaOH + HCl → NaCl + H2O"
+                ],
+                "answer": "C"
+            },
+            {
+                "question": "Укажите уравнение необратимой реакции (по признаку выпадения осадка) среди представленных:",
+                "options": [
+                    "A) Ba2+ + SO4(2-) → BaSO4↓",
+                    "B) N2 + 3H2 ⇄ 2NH3",
+                    "C) CO2 + H2O ⇄ H2CO3",
+                    "D) CH3COOH + C2H5OH ⇄ CH3COOC2H5 + H2O"
+                ],
+                "answer": "A"
+            },
+            {
+                "question": "Какая реакция относится к реакциям замещения с участием галогенов?",
+                "options": [
+                    "A) H2 + Cl2 → 2HCl",
+                    "B) 2NaBr + Cl2 → 2NaCl + Br2",
+                    "C) CaCO3 → CaO + CO2",
+                    "D) NaOH + HCl → NaCl + H2O"
+                ],
+                "answer": "B"
+            },
+            {
+                "question": "Какое из уравнений описывает реакцию нейтрализации (частный случай обмена)?",
+                "options": [
+                    "A) Zn + 2HCl → ZnCl2 + H2",
+                    "B) NaOH + HCl → NaCl + H2O",
+                    "C) AgNO3 + NaCl → AgCl↓ + NaNO3",
+                    "D) CuO + H2 → Cu + H2O"
+                ],
+                "answer": "B"
+            },
+            {
+                "question": "Выберите уравнение реакции разложения, протекающей с поглощением теплоты (эндотермической):",
+                "options": [
+                    "A) C + O2 → CO2",
+                    "B) 2Mg + O2 → 2MgO",
+                    "C) CaCO3 → CaO + CO2",
+                    "D) 2H2 + O2 → 2H2O"
+                ],
+                "answer": "C"
+            },
+            {
+                "question": "Какой тип химической реакции иллюстрирует уравнение Fe2O3 + 3H2 → 2Fe + 3H2O?",
+                "options": [
+                    "A) Соединение",
+                    "B) Разложение",
+                    "C) Замещение",
+                    "D) Обмен"
+                ],
+                "answer": "C"
+            }
+        ]
+
+        self.current_question = 0
+        self.score = 0
+
+        self.create_widgets()
+        self.load_question()
+
+    def create_widgets(self):
+        self.title_label = tk.Label(self.root, text="Тест: Типы химических реакций", font=("Arial", 16, "bold"), bg="#f0f4f8", fg="#1e293b")
+        self.title_label.pack(pady=15)
+
+        self.progress_label = tk.Label(self.root, text="", font=("Arial", 10, "bold"), bg="#f0f4f8", fg="#64748b")
+        self.progress_label.pack(anchor="w", padx=30)
+
+        self.question_label = tk.Label(self.root, text="", font=("Arial", 12, "bold"), bg="#f0f4f8", fg="#0f172a", wraplength=560, justify="left")
+        self.question_label.pack(pady=15, padx=30, anchor="w")
+
+        self.option_buttons = []
+        for i in range(4):
+            btn = tk.Button(self.root, text="", font=("Arial", 11), bg="#ffffff", fg="#1e293b", activebackground="#e2e8f0", anchor="w", padx=15, relief="raised", bd=1, command=lambda idx=i: self.check_answer(idx))
+            btn.pack(fill="x", padx=30, pady=6)
+            self.option_buttons.append(btn)
+
+    def load_question(self):
+        if self.current_question < len(self.questions):
+            q = self.questions[self.current_question]
+            self.progress_label.config(text=f"Вопрос {self.current_question + 1} из {len(self.questions)}")
+            self.question_label.config(text=q["question"])
+            for i, opt in enumerate(q["options"]):
+                self.option_buttons[i].config(text=opt, state="normal", bg="#ffffff")
+        else:
+            self.show_results()
+
+    def check_answer(self, idx):
+        q = self.questions[self.current_question]
+        selected_letter = ["A", "B", "C", "D"][idx]
+
+        # Отключаем кнопки на время паузы
+        for btn in self.option_buttons:
+            btn.config(state="disabled")
+
+        if selected_letter == q["answer"]:
+            self.option_buttons[idx].config(bg="#d1fae5")  # Зеленый оттенок при правильном ответе
+            self.score += 1
+        else:
+            self.option_buttons[idx].config(bg="#fee2e2")  # Красный оттенок при ошибке
+            correct_idx = ["A", "B", "C", "D"].index(q["answer"])
+            self.option_buttons[correct_idx].config(bg="#d1fae5")  #двойная подсветка правильного
+
+        # Задержка 1.2 секунды перед переходом к следующему вопросу
+        self.root.after(1200, self.advance)
+
+    def advance(self):
+        self.current_question += 1
+        self.load_question()
+
+    def show_results(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+        total = len(self.questions)
+        percentage = (self.score / total) * 100
+
+        result_frame = tk.Frame(self.root, bg="#f0f4f8")
+        result_frame.pack(expand=True, fill="both", padx=30, pady=30)
+
+        tk.Label(result_frame, text="Тест завершен!", font=("Arial", 18, "bold"), bg="#f0f4f8", fg="#1e293b").pack(pady=10)
+        tk.Label(result_frame, text=f"Ваш результат: {self.score} из {total} ({percentage:.1f}%)", font=("Arial", 14, "bold"), bg="#f0f4f8", fg="#2563eb").pack(pady=10)
+
+        comment = ""
+        if self.score == total:
+            comment = "Великолепно! Отличное знание химических реакций."
+        elif self.score >= 7:
+            comment = "Хороший результат! Вы уверенно ориентируетесь в темах."
+        else:
+            comment = "Стоит повторить классификацию химических реакций."
+
+        tk.Label(result_frame, text=comment, font=("Arial", 12), bg="#f0f4f8", fg="#475569", wraplength=500).pack(pady=10)
+
+        restart_btn = tk.Button(result_frame, text="Пройти заново", font=("Arial", 12, "bold"), bg="#2563eb", fg="#ffffff", padx=20, pady=10, command=self.restart_quiz)
+        restart_btn.pack(pady=20)
+
+    def restart_quiz(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        self.current_question = 0
+        self.score = 0
+        self.create_widgets()
+        self.load_question()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ChemistryQuizApp(root)
+    root.mainloop()
